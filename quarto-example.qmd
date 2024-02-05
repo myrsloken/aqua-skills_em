@@ -1,0 +1,74 @@
+---
+title: "Example quarto document"
+author: "Max Lindmark"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+toc: true
+format: 
+  html:
+    page-layout: full
+    embed-resources: true
+knitr: 
+  opts_chunk:
+    fig.align: center
+    out-width: 100%
+editor: source
+execute: 
+  echo: true
+  eval: true
+  cache: false
+---
+
+## Quarto
+
+Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
+
+## Load libraries
+
+```{r}
+library(palmerpenguins)
+library(ggplot2)
+# devtools::install_github("seananderson/ggsidekick")
+library(ggsidekick)
+library(broom)
+```
+
+## Penguins!!
+![](figures/penguins.jpg){fig-align="center" height="450"}
+
+## Plotting
+
+```{r}
+#| warning: false
+
+mass_flipper <- ggplot(data = penguins, 
+                       aes(x = flipper_length_mm,
+                           y = body_mass_g)) +
+  geom_point(aes(color = species, 
+                 shape = species),
+             size = 3,
+             alpha = 0.8) +
+  scale_color_manual(values = c("darkorange","purple","cyan4")) +
+  labs(title = "Penguin size, Palmer Station LTER",
+       subtitle = "Flipper length and body mass for Adelie, Chinstrap and Gentoo Penguins",
+       x = "Flipper length (mm)",
+       y = "Body mass (g)",
+       color = "Penguin species",
+       shape = "Penguin species") +
+  theme_sleek() +
+  theme(legend.position = c(0.2, 0.7),
+        plot.title.position = "plot",
+        plot.caption = element_text(hjust = 0, face= "italic"),
+        plot.caption.position = "plot")
+
+mass_flipper
+```
+
+## Analyze
+
+```{r}
+fit <- lm(flipper_length_mm ~ body_mass_g*species, data = penguins)
+
+tidy(fit)
+glance(fit)
+```
+
